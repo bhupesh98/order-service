@@ -1,0 +1,8 @@
+{
+  "properties": [
+    {
+      "name": "service.inventory.url",
+      "type": "java.lang.String",
+      "description": "External inventory service API url."
+    }
+  ] }

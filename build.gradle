@@ -1,0 +1,70 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.3.2'
+    id 'io.spring.dependency-management' version '1.1.6'
+    id 'com.github.davidmc24.gradle.plugin.avro' version '1.9.1'
+}
+
+ext {
+    springCloudVersion = "2023.0.3"
+}
+
+group = 'com.bhupesh'
+version = '1.0-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    maven {
+        url "https://packages.confluent.io/maven"
+    }
+}
+
+dependencies {
+    implementation 'io.confluent:kafka-avro-serializer:5.3.0'
+    implementation 'io.confluent:kafka-schema-registry-client:7.7.0'
+    implementation 'org.apache.avro:avro:1.12.0'
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0'
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-api:2.6.0'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.flywaydb:flyway-core'
+    implementation 'org.flywaydb:flyway-mysql'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j'
+    implementation 'org.springframework.kafka:spring-kafka'
+    testImplementation 'org.testcontainers:junit-jupiter'
+    testImplementation 'org.springframework.cloud:spring-cloud-starter-contract-stub-runner'
+    testImplementation 'org.testcontainers:junit-jupiter'
+    testImplementation 'org.springframework.kafka:spring-kafka-test'
+    testImplementation 'org.springframework.boot:spring-boot-testcontainers'
+    testImplementation 'org.testcontainers:kafka'
+    testImplementation 'org.testcontainers:mysql'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    compileOnly 'org.projectlombok:lombok'
+    runtimeOnly 'com.mysql:mysql-connector-j'
+    annotationProcessor 'org.projectlombok:lombok'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:$springCloudVersion"
+    }
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}

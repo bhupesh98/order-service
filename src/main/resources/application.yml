@@ -1,0 +1,69 @@
+spring:
+  application:
+    name: order-service
+  datasource:
+    url: jdbc:mysql://localhost:3306/${MYSQL_DATABASE}
+    username: ${MYSQL_USERNAME}
+    password: ${MYSQL_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: none
+    open-in-view: true
+  kafka:
+    bootstrap-servers: localhost:9092
+    template:
+      default-topic: order-placed
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
+      properties:
+        schema.registry.url: http://localhost:8081
+
+server:
+  port: 5001
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+  api-docs:
+    path: /api-docs
+
+service:
+  inventory:
+    url: http://localhost:5002
+
+## Actuator Endpoints
+management:
+  health:
+    circuitbreakers:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: *
+  endpoint:
+    health:
+      show-details: always
+
+## Resilience4J
+resilience4j:
+  circuitbreaker:
+    instances:
+      default:
+        register-health-indicator: true
+        sliding-window-type: count_based
+        slidingWindowSize: 10
+        failureRateThreshold: 50
+        waitDurationInOpenState: 5s
+        permittedNumberOfCallsInHalfOpenState: 3
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+        minimum-number-of-calls: 5
+  timelimiter:
+    instances:
+      default:
+        timeout-duration: 3s
+  retry:
+    instances:
+      default:
+        max-attempts: 3
+        wait-duration: 2s
