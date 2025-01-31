@@ -4,5 +4,11 @@
       "name": "service.inventory.url",
       "type": "java.lang.String",
       "description": "External inventory service API url."
+    },
+    {
+      "name": "loki.url",
+      "type": "java.lang.String",
+      "description": "URL for loki logging."
     }
-  ] }
+  ]
+}

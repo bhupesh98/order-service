@@ -33,17 +33,6 @@ service:
     url: http://localhost:5002
 
 ## Actuator Endpoints
-management:
-  health:
-    circuitbreakers:
-      enabled: true
-  endpoints:
-    web:
-      exposure:
-        include: *
-  endpoint:
-    health:
-      show-details: always
 
 ## Resilience4J
 resilience4j:
@@ -67,3 +56,28 @@ resilience4j:
       default:
         max-attempts: 3
         wait-duration: 2s
+
+
+## LOKI & Actuator configuration
+loki.url: http://localhost:3100/loki/api/v1/push
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+  metrics:
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true
+  observations:
+    key-values:
+      application: ${spring.application.name}
+  health:
+    circuitbreakers:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: *
+  endpoint:
+    health:
+      show-details: always
